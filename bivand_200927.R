@@ -19,7 +19,6 @@ byb <- rbind(byb0[,o], byb1[,o])
 
 ## ---- echo = TRUE, eval=FALSE, mysize=TRUE, size='\\tiny'-----------------------
 library(mapview)
-mapviewOptions(fgb = FALSE)
 mapview(byb)
 
 
@@ -321,10 +320,11 @@ st_distance(b_pump_sf_ll, b_pump_sf1_ll)
 
 ## ---- echo = FALSE, eval=FALSE, results='hide'----------------------------------
 library(mapview)
-mapviewOptions(fgb = FALSE)
-pts <- rbind(b_pump_sf_ll, b_pump_sf1_ll)
-pts$CRS <- c("original", "degraded")
-mapview(pts, zcol="CRS", map.type="OpenStreetMap", col.regions=c("green", "red"), cex=18)
+## mapviewOptions(fgb = FALSE)
+## pts <- rbind(b_pump_sf_ll, b_pump_sf1_ll)
+## pts$CRS <- c("original", "degraded")
+webmap1 <- mapview(pts, zcol="CRS", map.type="OpenStreetMap", col.regions=c("green", "red"), cex=18)
+webmap1
 ## mapshot(webmap1, file="webmap1.png")
 ## file.copy("webmap1.png", "bivand_200927_files/figure-beamer")
 ## unlink("webmap1.png")
@@ -357,6 +357,18 @@ cat(st_crs("OGC:CRS:84")$wkt, "\n")
 
 ## ---- echo = TRUE, eval=TRUE, mysize=TRUE, size='\\tiny'------------------------
 cat(wkt(CRS("OGC:CRS84")), "\n")
+
+
+## ---- echo = TRUE, eval=TRUE, mysize=TRUE, size='\\tiny'------------------------
+rgdal::set_prefer_proj(FALSE)
+GDAL_SRS <- wkt(CRS("OGC:CRS84"))
+all.equal(st_crs("OGC:CRS:84")$wkt, GDAL_SRS)
+rgdal::set_prefer_proj(TRUE)
+
+
+## ---- echo = TRUE, eval=TRUE, mysize=TRUE, size='\\tiny'------------------------
+cat(GDAL_SRS, "\n")
+rgdal::compare_CRS(CRS("OGC:CRS84"), as(st_crs("OGC:CRS:84"), "CRS"))
 
 
 ## ---- echo = TRUE, eval=TRUE, mysize=TRUE, size='\\tiny', warning=FALSE, message=FALSE----
